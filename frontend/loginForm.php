@@ -14,7 +14,7 @@ if(isset($_POST["submit"])){
             
             $_SESSION["login"] = true;
             $_SESSION["id"] = $row["id"];
-            header("location: indexLog.php"); 
+            header("location: index.php"); 
             exit();
         }
         else{

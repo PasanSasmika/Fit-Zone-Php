@@ -1,190 +1,180 @@
-<?php
-session_start();
-@include 'config.php';
-@include 'GetFunctions.php';
-
-// Check if user is logged in
-$isLoggedIn = !empty($_SESSION["id"]);
-if ($isLoggedIn) {
-    $id = $_SESSION["id"];
-    $result = mysqli_query($conn, "SELECT * FROM userlog WHERE id = '$id'");
-    $row = mysqli_fetch_assoc($result);
-}
-
-// Fetch common data (for both logged-in and guest users)
-$class = getClass($conn);
-$trainer = getTrainers($conn);
-$plan = getPlans($conn);
-$story = getStory($conn);
-
-// Handle form submissions
-$success = '';
-if (isset($_POST['submit'])) {
-    $name = $_POST['name'];
-    $plan = $_POST['plan'];
-    $email = $_POST['email'];
-    $description = $_POST['description'];
-
-    $sql = "INSERT INTO `customerplan`(`id`, `name`, `plan`, `email`, `description`) 
-            VALUES (NULL, '$name', '$plan', '$email', '$description')";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        $success = "New plan added successfully!";
-    } else {
-        echo "Failed: " . mysqli_error($conn);
-    }
-}
-
-if (isset($_POST['send'])) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $class = $_POST['class'];
-
-    $sql = "INSERT INTO `customerclass`(`name`, `email`, `class`) 
-            VALUES ('$name', '$email', '$class')";
-
-    $result = mysqli_query($conn, $sql);
-
-    if ($result) {
-        $success = "New class added successfully!";
-    } else {
-        echo "Failed: " . mysqli_error($conn);
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Web Design Mastery | Power</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteFit Gym - Premium Fitness Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styleiii.css" />
 </head>
 <body>
-    <header class="header">
-        <nav>
-            <div class="nav__header">
-                <div class="nav__logo">
-                    <img src="assets/logo.png" alt="logo" />
-                </div>
-                <div class="nav__menu__btn" id="menu-btn">
-                    <span><i class="ri-menu-line"></i></span>
-                </div>
-            </div>
-            <ul class="nav__links" id="nav-links">
-                <li class="link"><a href="#home">Home</a></li>
-                <li class="link"><a href="#about">About</a></li>
-                <li class="link"><a href="#class">Classes</a></li>
-                <li class="link"><a href="#trainer">Trainers</a></li>
-                <li class="link"><a href="#price">Pricing</a></li>
-                <?php if ($isLoggedIn) : ?>
-                    <li class="link profile-link">
-                        <a href="profil.php"><i class="bx bx-user"></i> Profile</a>
-                    </li>
-                <?php else : ?>
-                    <li class="link"><a href="loginForm.php">Login</a></li>
-                <?php endif; ?>
-            </ul>
-        </nav>
-        <div class="section__container header__container" id="home">
-            <div class="header__image">
-                <img src="assets/hero-banner.png" alt="header" />
-            </div>
-            <div class="header__content">
-                <h4>Build Your Body &</h4>
-                <h1 class="section__header">Shape Yourself!</h1>
-                <p>
-                    Unleash your potential and embark on a journey towards a stronger,
-                    fitter, and more confident you. Sign up for 'Make Your Body Shape'
-                    now and witness the incredible transformation your body is capable
-                    of!
-                </p>
-                <div class="header__btn">
+    <?php
+    session_start();
+    @include 'config.php';
+    @include 'GetFunctions.php';
+
+    // Check if user is logged in
+    $isLoggedIn = !empty($_SESSION["id"]);
+    if ($isLoggedIn) {
+        $id = $_SESSION["id"];
+        $result = mysqli_query($conn, "SELECT * FROM userlog WHERE id = '$id'");
+        $row = mysqli_fetch_assoc($result);
+    }
+
+    // Fetch common data (for both logged-in and guest users)
+    $class = getClass($conn);
+    $trainer = getTrainers($conn);
+    $plan = getPlans($conn);
+    $story = getStory($conn);
+
+    // Handle form submissions
+    $success = '';
+    if (isset($_POST['submit'])) {
+        $name = $_POST['name'];
+        $selectedPlan = $_POST['plan']; // Changed variable name
+        $email = $_POST['email'];
+        $description = $_POST['description'];
+    
+        $sql = "INSERT INTO `customerplan`(`id`, `name`, `plan`, `email`, `description`) 
+                VALUES (NULL, '$name', '$selectedPlan', '$email', '$description')"; // Use new variable
+    
+        $result = mysqli_query($conn, $sql);
+    
+        if ($result) {
+            $success = "New plan added successfully!";
+        } else {
+            echo "Failed: " . mysqli_error($conn);
+        }
+    }
+    
+    // Fetch plans (this remains unchanged)
+    $plan = getPlans($conn);
+
+    if (isset($_POST['send'])) {
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $selected_class = $_POST['class']; // Changed variable name
+    
+        $sql = "INSERT INTO `customerclass`(`name`, `email`, `class`) 
+                VALUES ('$name', '$email', '$selected_class')";
+    
+        $result = mysqli_query($conn, $sql);
+    
+        if ($result) {
+            $success = "New class added successfully!";
+        } else {
+            echo "Failed: " . mysqli_error($conn);
+        }
+    }
+
+    
+    if (isset($_POST['add'])) {
+        $name = $_POST['trainer_name'];
+        $email = $_POST['customer_email'];
+        $c_name = $_POST['customer_name'];
+
+        $sql = "INSERT INTO `customertrainer`(`trainer_name`, `customer_email`, `customer_name`) 
+                VALUES ('$name', '$email', '$c_name')";
+
+        $result = mysqli_query($conn, $sql);
+
+        if ($result) {
+            $success = "New Trainer added successfully!";
+        } else {
+            echo "Failed: " . mysqli_error($conn);
+        }
+    }
+    ?>
+    
+    <!-- Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">Fit<span>Zone</span></a>
+                <ul class="nav-links">
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#trainers">Trainers</a></li>
+                    <li><a href="#plans">Plans</a></li>
+                    <li><a href="#success-stories">Success Stories</a></li>
+                    <li><a href="#contact">Contact</a></li>
                     <?php if ($isLoggedIn) : ?>
-                        <span>Welcome <?php echo $row["name"]; ?></span>
+                        <li class="profile-link">
+                            <a href="profil.php"><i class="fas fa-user"></i> Profile</a>
+                        </li>
                     <?php else : ?>
-                        <a href="loginForm.php">Login</a>
+                        <li><a href="loginForm.php">Login</a></li>
                     <?php endif; ?>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
                 </div>
-            </div>
+            </nav>
         </div>
     </header>
 
-    <!-- About Section -->
-    <section class="section__container about__container" id="about">
-        <div class="about__image">
-            <img class="about__bg" src="assets/dot-bg.png" alt="bg" />
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Elevate Your Fitness Journey</h1>
+                <p>Join our premium fitness center with world-class facilities, expert trainers, and personalized programs designed to help you achieve your goals.</p>
+                <a href="#plans" class="btn">View Plans</a>
+                <?php if ($isLoggedIn) : ?>
+                    <div class="welcome-message">
+                        Welcome <?php echo htmlspecialchars($row["name"]); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
-        <div class="about__content">
-            <h2 class="section__header">Our Story</h2>
-            <p class="section__description">
-                Led by our team of expert and motivational instructors, "The Class You Will Get Here" is a high-energy, results-driven session that combines a perfect blend of cardio, strength training, and functional exercises.
-            </p>
-            <div class="about__grid">
-                <div class="about__card">
-                    <span><i class='bx bx-dumbbell'></i></span>
-                    <div>
-                        <h4>State-of-the-Art Equipment</h4>
-                        <p>
-                            We provide the latest, high-quality equipment to help you achieve your fitness goals with precision and comfort.
-                        </p>
-                    </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2>About EliteFit Gym</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Why Choose EliteFit?</h3>
+                    <p>EliteFit Gym is a premier fitness destination offering cutting-edge equipment, diverse training programs, and expert guidance. Our facility is designed to provide the ultimate workout experience for all fitness levels.</p>
+                    <p>We combine science-backed training methods with personalized attention to help you achieve sustainable results. Our community-focused approach ensures you'll always feel motivated and supported.</p>
+                    <p>With 24/7 access, recovery facilities, and nutrition counseling, we provide everything you need for complete fitness transformation.</p>
+                    <a href="#trainers" class="btn">Meet Our Trainers</a>
                 </div>
-                <div class="about__card">
-                    <span><i class='bx bxs-chart'></i></span>
-                    <div>
-                        <h4>Flexible Membership Options</h4>
-                        <p>
-                            We offer a variety of membership plans designed to fit different needs and lifestyles, ensuring that you can choose the best fit for your fitness goals.
-                        </p>
-                    </div>
-                </div>
-                <div class="about__card">
-                    <span><i class="ri-p2p-line"></i></span>
-                    <div>
-                        <h4>Expert Guidance</h4>
-                        <p>
-                            Our team of certified trainers and fitness experts is here to guide you every step of the way, ensuring you progress safely and effectively.
-                        </p>
-                    </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Gym Interior">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Classes Section -->
-    <section class="section__container class__container" id="class">
-        <h2 class="section__header">Our Classes</h2>
-        <p class="section__description">
-            Discover a diverse range of exhilarating classes at our gym designed to
-            cater to all fitness levels and interests.
-        </p>
-        <div class="class__grid">
-            <?php foreach($class as $classes): ?>
-                <div class="class__card">
-                    <img src="<?php echo '/FitZone/upload_img/' . htmlspecialchars($classes['class_image']); ?>" alt="Class Image" />
-                    <div class="class__content">
-                        <h4><?php echo htmlspecialchars($classes['class_name']); ?></h4>
-                        <p><?php echo htmlspecialchars($classes['class_date']); ?></p>
-                        <p><?php echo htmlspecialchars($classes['class_time']); ?></p>
-                        <p><?php echo htmlspecialchars($classes['trainer']); ?></p>
-                        <h3><?php echo htmlspecialchars($classes['description']); ?></h3>
+    <!-- Services Section -->
+    <section id="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <p class="text-center">Comprehensive fitness solutions tailored to your needs</p>
+            <div class="services-grid">
+                <?php foreach($class as $classes): ?>
+                    <div class="service-card">
+                        <div class="service-img">
+                            <img src="<?php echo '/FitZone/upload_img/' . htmlspecialchars($classes['class_image']); ?>" alt="<?php echo htmlspecialchars($classes['class_name']); ?>">
+                        </div>
+                        <div class="service-text">
+                            <h3><?php echo htmlspecialchars($classes['class_name']); ?></h3>
+                            <p><?php echo htmlspecialchars($classes['description']); ?></p>
+                            <p>Trainer: <?php echo htmlspecialchars($classes['trainer']); ?></p>
+                            <p>Schedule: <?php echo htmlspecialchars($classes['class_date']) . ' ' . htmlspecialchars($classes['class_time']); ?></p>
+                            <?php if ($isLoggedIn) : ?>
+                                <button class="btn" onclick="openClassModal('Cardio Blast')">Select Class</button>
+                                <?php else : ?>
+                                <button class="btn select-btn" onclick="window.location.href='loginForm.php';">Login to Join</button>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-            <?php if ($isLoggedIn) : ?>
-                <button class="btn" id="joinNowBtn">Join Now</button>
-            <?php else : ?>
-                <button class="btn" onclick="window.location.href='loginForm.php';">Join Now</button>
-            <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-
-        <!-- Class Join Form -->
         <div class="cls_popup-form" id="cls_popupForm">
             <div class="cls_popup-form-content">
                 <span class="cls_close-btn" id="cls_closeBtn">&times;</span>
@@ -210,70 +200,108 @@ if (isset($_POST['send'])) {
             </div>
         </div>
     </section>
+    
 
     <!-- Trainers Section -->
-    <section class="section__container trainer__container" id="trainer">
-        <h2 class="section__header">Our Trainers</h2>
-        <p class="section__description">
-            Our trainers are more than just experts in exercise; they are passionate
-            about helping you achieve your health and fitness goals.
-        </p>
-        <div class="trainer__grid">
-            <?php foreach($trainer as $trainers): ?>
-                <div class="trainer__card">
-                    <img src="<?php echo '/FitZone/upload_img/' . htmlspecialchars($trainers['trainer_image']); ?>" alt="Trainer Image" />
-                    <div class="trainer__content">
-                        <h4><?php echo htmlspecialchars($trainers['trainer_name']); ?></h4>
-                        <h5><?php echo htmlspecialchars($trainers['trainer_expe']); ?></h5>
-                        <h5><?php echo htmlspecialchars($trainers['trainer_Cinfo']); ?></h5>
-                        <hr />
-                        <p>
-                            <?php echo htmlspecialchars($trainers['description']); ?>
-                        </p>
-                        <div class="trainer__socials">
-                            <a href="#"><i class="ri-facebook-fill"></i></a>
-                            <a href="#"><i class="ri-google-fill"></i></a>
-                            <a href="#"><i class="ri-instagram-line"></i></a>
-                            <a href="#"><i class="ri-twitter-fill"></i></a>
+    <section id="trainers">
+        <div class="container">
+            <h2>Our Expert Trainers</h2>
+            <p class="text-center">Learn from the best in the industry</p>
+            <div class="trainers-grid">
+                <?php foreach($trainer as $trainers): ?>
+                    <div class="trainer-card">
+                        <div class="trainer-img">
+                            <img src="<?php echo '/FitZone/upload_img/' . htmlspecialchars($trainers['trainer_image']); ?>" alt="<?php echo htmlspecialchars($trainers['trainer_name']); ?>">
+                        </div>
+                        <div class="trainer-info">
+                            <h3><?php echo htmlspecialchars($trainers['trainer_name']); ?></h3>
+                            <p class="trainer-specialty"><?php echo htmlspecialchars($trainers['trainer_expe']); ?></p>
+                            <p class="trainer-contact"><?php echo htmlspecialchars($trainers['trainer_Cinfo']); ?></p>
+                            <p class="trainer-bio"><?php echo htmlspecialchars($trainers['description']); ?></p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-linkedin"></i></a>
+                                <a href="#"><i class="fas fa-envelope"></i></a>
+                            </div>
+                            <?php if ($isLoggedIn) : ?>
+                                <button class="btn select-btn">Select Trainer</button>
+                            <?php else : ?>
+                                <button class="btn select-btn" onclick="window.location.href='loginForm.php';">Login to Book</button>
+                            <?php endif; ?>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
+        <div class="trainer-popup-form" id="trainerPopupForm">
+    <div class="trainer-popup-content">
+        <span class="close-btn" id="trainerCloseBtn">×</span>
+        <h2>Book Trainer: <span id="selectedTrainerName"></span></h2>
+        <p>Please fill out the following information:</p>
+        <?php if ($success) : ?>
+            <div class="success-message">
+                <i class='bx bxs-check-circle'></i>
+                <?php echo $success; ?>
+            </div>
+        <?php endif; ?>
+        <form action="" method="POST">
+            <label for="trainer_name">Trainer Name:</label>
+            <input type="text" id="trainer_name" name="trainer_name" readonly required />
+
+            <label for="customer_name">Your Name:</label>
+            <input type="text" id="customer_name" name="customer_name" 
+                   value="<?php echo $isLoggedIn ? htmlspecialchars($row['name']) : ''; ?>" required />
+
+            <label for="customer_email">Your Email:</label>
+            <input type="email" id="customer_email" name="customer_email" 
+                   value="<?php echo $isLoggedIn ? htmlspecialchars($row['email']) : ''; ?>" required />
+
+            <button type="submit" name="add" class="submit-btn">Book Trainer</button>
+        </form>
+    </div>
+</div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="section__container price__container" id="price">
-        <h2 class="section__header">Our Pricing</h2>
-        <p class="section__description">
-            Our pricing plan comes with various membership tiers, each tailored to
-            cater to different preferences and fitness aspirations.
-        </p>
-        <div class="price__grid">
+    <!-- Plans Section -->
+   <!-- Plans Section -->
+<section id="plans">
+    <div class="container">
+        <!-- Success Message Display -->
+        <?php if (!empty($success)): ?>
+            <div class="success-banner">
+                <i class="fas fa-check-circle"></i>
+                <?php echo $success; ?>
+                <span class="close-banner" onclick="this.parentElement.style.display='none'">&times;</span>
+            </div>
+        <?php endif; ?>
+
+        <h2>Membership Plans</h2>
+        <p class="text-center">Choose the perfect plan for your fitness journey</p>
+        
+        <div class="plans-grid">
             <?php foreach($plan as $plans): ?>
-                <div class="price__card">
-                    <div class="price__content">
-                        <h4><?php echo htmlspecialchars($plans['membership_plan']); ?></h4>
-                        <img src="assets/price-1.png" alt="price" />
-                        <p>
-                            <?php echo htmlspecialchars($plans['description']); ?>
-                        </p>
-                        <hr />
-                        <h4><?php echo htmlspecialchars($plans['trainer']); ?></h4>
-                        <h4><?php echo htmlspecialchars($plans['price']); ?></h4>
-                        <p><?php echo htmlspecialchars($plans['plan_type']); ?></p>
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h3><?php echo htmlspecialchars($plans['membership_plan']); ?></h3>
+                        <div class="plan-price"><?php echo htmlspecialchars($plans['price']); ?></div>
+                        <div class="plan-type"><?php echo htmlspecialchars($plans['plan_type']); ?></div>
                     </div>
-                    <?php if ($isLoggedIn) : ?>
-                        <button class="btn" onclick="showForm()">Join Now</button>
-                    <?php else : ?>
-                        <button class="btn" onclick="window.location.href='loginForm.php';">Join Now</button>
-                    <?php endif; ?>
+                    <div class="plan-features">
+                        <p><?php echo htmlspecialchars($plans['description']); ?></p>
+                        <p class="plan-trainer">Recommended trainer: <?php echo htmlspecialchars($plans['trainer']); ?></p>
+                        <?php if ($isLoggedIn) : ?>
+                            <button class="btn" onclick="openPlanModal('<?php echo htmlspecialchars($plans['membership_plan']); ?>', '<?php echo htmlspecialchars($plans['price']); ?>')">Select Plan</button>
+                        <?php else : ?>
+                            <button class="btn" onclick="window.location.href='loginForm.php';">Login to Join</button>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
+    </div>
+</section>
 
-        <!-- Plan Join Form -->
-        <div class="popup-form" id="popupForm">
+<div class="popup-form" id="popupForm">
             <div class="popup-form-content">
                 <span class="close-btn" onclick="closeForm()">&times;</span>
                 <h2>Add Your Plan</h2>
@@ -310,80 +338,272 @@ if (isset($_POST['send'])) {
             </div>
         </div>
     </section>
+    <!-- Success Stories Section -->
+    <section id="success-stories">
+        <div class="container">
+            <h2>Success Stories</h2>
+            <p class="text-center">Real people, real results - be inspired by our members' transformations</p>
+            <div class="stories-grid">
+                <?php foreach($story as $stories): ?>
+                    <div class="story-card">
+                        <div class="story-img">
+                            <img src="<?php echo '/FitZone/upload_img/' . htmlspecialchars($stories['picture']); ?>" alt="<?php echo htmlspecialchars($stories['title']); ?>">
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title"><?php echo htmlspecialchars($stories['title']); ?></h3>
+                            <p class="story-name"><?php echo htmlspecialchars($stories['name']); ?></p>
+                            <p class="story-achievement"><?php echo htmlspecialchars($stories['achievement']); ?></p>
+                            <p class="story-date"><?php echo htmlspecialchars($stories['date']); ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
 
-    <!-- Footer Section -->
-    <footer class="footer">
-        <div class="section__container footer__container">
-            <div class="footer__col">
-                <div class="nav__logo">
-                    <img src="assets/logo.png" alt="logo" />
-                </div>
-                <p>
-                    Take the first step towards a healthier, stronger you with our
-                    unbeatable pricing plans. Let's sweat, achieve, and conquer
-                    together!
-                </p>
-                <div class="footer__socials">
-                    <a href="#"><i class="ri-facebook-fill"></i></a>
-                    <a href="#"><i class="ri-instagram-line"></i></a>
-                    <a href="#"><i class="ri-twitter-fill"></i></a>
-                </div>
-            </div>
-            <div class="footer__col">
-                <h4>Company</h4>
-                <div class="footer__links">
-                    <a href="#">Business</a>
-                    <a href="#">Franchise</a>
-                    <a href="#">Partnership</a>
-                    <a href="#">Network</a>
-                </div>
-            </div>
-            <div class="footer__col">
-                <h4>About Us</h4>
-                <div class="footer__links">
-                    <a href="#">Blogs</a>
-                    <a href="#">Security</a>
-                    <a href="#">Careers</a>
-                </div>
-            </div>
-            <div class="footer__col">
-                <h4>Contact</h4>
-                <div class="footer__links">
-                    <a href="#">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms & Conditions</a>
-                    <a href="#">BMI Calculator</a>
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2>Get In Touch</h2>
+            <p class="text-center">Ready to start your fitness transformation? Contact us today!</p>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    <p>We're here to answer your questions about memberships, training programs, or our facilities.</p>
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>Location</h4>
+                            <p>456 Fitness Avenue, Health City, HC 67890</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>(555) 987-6543</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@elitefitgym.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <h4>Hours</h4>
+                            <p>Monday - Friday: 5:00 AM - 11:00 PM</p>
+                            <p>Saturday - Sunday: 7:00 AM - 9:00 PM</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="footer__bar">
-            Copyright © 2023 Web Design Mastery. All rights reserved.
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>EliteFit Gym</h3>
+                    <p>Your premier destination for comprehensive fitness training and wellness programs designed to help you achieve your health goals.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#trainers">Trainers</a></li>
+                        <li><a href="#plans">Plans</a></li>
+                        <li><a href="#success-stories">Success Stories</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#">Personal Training</a></li>
+                        <li><a href="#">Group Classes</a></li>
+                        <li><a href="#">Nutrition Counseling</a></li>
+                        <li><a href="#">Weight Management</a></li>
+                        <li><a href="#">Recovery Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 EliteFit Gym. All Rights Reserved.</p>
+            </div>
         </div>
     </footer>
 
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <script src="maini.js"></script>
+
+<!-- JavaScript -->
     <script>
-        // Show class form
-        document.getElementById('joinNowBtn').addEventListener('click', () => {
-            document.getElementById('cls_popupForm').style.display = 'block';
+        // Mobile Menu Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+        
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Smooth scrolling for all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
         });
 
-        // Close class form
-        document.getElementById('cls_closeBtn').addEventListener('click', () => {
-            document.getElementById('cls_popupForm').style.display = 'none';
+        
+
+
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target.className === 'modal') {
+                e.target.style.display = 'none';
+            }
         });
 
-        // Show plan form
-        function showForm() {
-            document.getElementById('popupForm').style.display = 'block';
-        }
 
-        // Close plan form
-        function closeForm() {
-            document.getElementById('popupForm').style.display = 'none';
-        }
+        // Success message handling
+        <?php if ($success): ?>
+            alert('<?php echo $success; ?>');
+        <?php endif; ?>
+
+        // Update your existing JavaScript with these functions
+function openPlanModal(planName) {
+    // Auto-select the plan in dropdown
+    const select = document.getElementById('membership_plan');
+    select.value = planName;
+    
+    // Show the form
+    document.getElementById('popupForm').style.display = 'flex';
+}
+
+function closeForm() {
+    document.getElementById('popupForm').style.display = 'none';
+}
+
+// Add click handler to your plan buttons
+document.querySelectorAll('.plan-card button').forEach(button => {
+    button.addEventListener('click', function() {
+        const planName = this.parentElement.querySelector('h3').textContent;
+        openPlanModal(planName);
+    });
+});
+
+// Close when clicking outside
+window.onclick = function(event) {
+    const popup = document.getElementById('popupForm');
+    if (event.target === popup) {
+        popup.style.display = 'none';
+    }
+}
+
+function openClassModal(className) {
+    const select = document.getElementById('cls_membership_plan');
+    select.value = className;
+    document.getElementById('cls_popupForm').style.display = 'flex';
+}
+
+function closeClassForm() {
+    document.getElementById('cls_popupForm').style.display = 'none';
+}
+
+// Event listeners for class popup
+document.getElementById('cls_closeBtn').addEventListener('click', closeClassForm);
+window.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('cls_popupForm')) {
+        closeClassForm();
+    }
+});
+// Add to your JavaScript
+document.querySelectorAll('.select-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const trainerCard = this.closest('.trainer-card');
+        const trainerName = trainerCard.querySelector('h3').textContent;
+        openTrainerForm(trainerName);
+    });
+});
+
+// Trainer Popup Functions
+function openTrainerForm(trainerName) {
+    // Set trainer name in form
+    document.getElementById('trainer_name').value = trainerName;
+    document.getElementById('selectedTrainerName').textContent = trainerName;
+    
+    // Show popup
+    document.getElementById('trainerPopupForm').style.display = 'flex';
+}
+
+function closeTrainerForm() {
+    document.getElementById('trainerPopupForm').style.display = 'none';
+}
+
+// Event listeners for trainer popup
+document.getElementById('trainerCloseBtn').addEventListener('click', closeTrainerForm);
+
+// Close when clicking outside popup
+window.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('trainerPopupForm')) {
+        closeTrainerForm();
+    }
+});
+
+// Update the trainer button click handlers
+document.querySelectorAll('.trainer-card .select-btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const trainerCard = this.closest('.trainer-card');
+        const trainerName = trainerCard.querySelector('h3').textContent;
+        openTrainerForm(trainerName);
+    });
+});
+
+
     </script>
 </body>
 </html>

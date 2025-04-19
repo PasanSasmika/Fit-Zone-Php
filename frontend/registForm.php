@@ -36,41 +36,41 @@ if(isset($_POST["submit"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" />
-
-    <title>Document</title>
+    <link rel="stylesheet" href="regi.css">
+    <title> Registration</title>
 </head>
 <body>
-    
+    <div class="background-image"></div>
+    <div class="container">
+        <form action="" method="POST" class="registration-form">
+            <h2> Registration</h2>
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
 
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-<form action="" method="POST">
-<h2>Registation</h2>
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required>
-  </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
 
-  <div class="form-group">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-  </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
 
-  <div class="form-group">
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-  </div>
+            <button type="submit" name="submit" class="submit-btn">Register</button>
 
-  <div class="form-group">
-    <label for="confirm-password">Confirm Password:</label>
-    <input type="password" id="confirm-password" name="confirm-password" required>
-  </div>
-
-  <button id="bttn" type="submit" name="submit">Submit</button>
-
-  <span>Already have an account</span>
-  <a href="loginForm.php">Login</a>
-</form>
-
+            <div class="login-link">
+                <span>Already have an account?</span>
+                <a href="loginForm.php">Login</a>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

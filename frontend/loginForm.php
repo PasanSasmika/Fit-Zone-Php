@@ -36,24 +36,24 @@ if(isset($_POST["submit"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" />
-
-    <title>Document</title>
+    <link rel="stylesheet" href="LogCss.css">
+    <title>Login</title>
 </head>
 <body>
-<div class="login-container">
+    <div class="background-image"></div>
+    <div class="login-container">
         <h2>Login</h2>
         <form method="POST" action="">
             <label for="username_or_email">Username or Email</label>
-            <input type="text" id="nameemail" name="nameemail" required>
+            <input type="text" id="nameemail" name="nameemail" placeholder="Enter your username or email" required>
 
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
             <button id="bttn" type="submit" name="submit">Login</button>
         </form>
 
-        <span>Dont have an account ?</span>
+        <span>Don't have an account?</span>
         <a href="registForm.php">Register</a>
     </div>
 </body>

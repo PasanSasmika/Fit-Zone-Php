@@ -1,88 +1,204 @@
+<?php
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Check if user is already logged in
+if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
+    header("Location: adminDashbord.html");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Fit Zone</title>
-
+    <title>Fit Zone - Admin Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --primary-dark: #3730a3;
+            --secondary: #f43f5e;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --light-gray: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
         body {
-            background-color: #f4f7fc;
-            color: #333;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px;
         }
-        .container {
-            margin-top: 100px;
-        }
-        .col-md-6 {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        .col-md-6 h3 {
-            font-size: 24px;
-            color: #007bff;
-            margin-bottom: 30px;
-        }
-        .form-control {
-            background-color: #f1f4f8;
-            border: 1px solid #dcdfe6;
-            color: #333;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-        .form-control:focus {
-            background-color: #ffffff;
-            border-color: #007bff;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-        }
-        .btn {
-            background-color: #007bff;
-            border: none;
+
+        .login-container {
+            max-width: 500px;
             width: 100%;
-            padding: 12px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .login-card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .login-header h3 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .login-body {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .form-control {
+            height: 50px;
             border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            border: 1px solid var(--light-gray);
+            padding-left: 45px;
+            transition: all 0.3s;
         }
-        .btn:hover {
-            background-color: #0056b3;
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
         }
-        .btn:active {
-            background-color: #004085;
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+
+        .input-group-text {
+            background-color: transparent;
+            border: none;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 4;
+            color: var(--gray);
         }
-        .form-group {
-            margin-bottom: 25px;
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            height: 50px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            transition: all 0.3s;
         }
-        .text-muted {
-            font-size: 14px;
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .staff-login-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .staff-login-link:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .login-header {
+                padding: 20px;
+            }
+            .login-body {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 text-center">
-                <h3>Welcome to Fit Zone</h3>
-                <form action="adminlog.php" method="POST">
-                    <div class="form-group">
-                        <input type="text" name="username" class="form-control" placeholder="Enter Username" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="password" class="form-control" placeholder="Enter Password" required />
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Login" class="btn" />
-                    </div>
-                </form>
-                <p class="text-muted">You are an Staff Member  <a href="staffLog.php"> Log In </a></p>
+        <div class="login-container">
+            <div class="card login-card">
+                <div class="login-header">
+                    <h3><i class='bx bx-dumbbell'></i> Fit Zone Admin</h3>
+                    <p>Access your management dashboard</p>
+                </div>
+                <div class="card-body login-body">
+                    <form action="adminlog.php" method="POST">                    
+                        <div class="mb-4 position-relative">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class='bx bx-user'></i></span>
+                                <input type="text" name="username" class="form-control" placeholder="Enter Username" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4 position-relative">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class='bx bx-lock-alt'></i></span>
+                                <input type="password" name="password" class="form-control" placeholder="Enter Password" required>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-login w-100 mb-3">
+                            <i class='bx bx-log-in'></i> Login
+                        </button>
+                        
+                        <p class="text-center text-muted mb-0">
+                            Staff member? <a href="staffLog.php" class="staff-login-link">Log in here</a>
+                        </p>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

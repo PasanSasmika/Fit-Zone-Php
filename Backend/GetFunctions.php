@@ -31,9 +31,34 @@ function getAppointmentclass($conn){
     return $appclass;
 }
 
+function getTrainerAppointments($conn) {
+    $sql = "SELECT * FROM customertrainer";
+    $result = $conn->query($sql);
+    $appointments = [];
+    if($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $appointments[] = $row;
+        }
+    }
+    return $appointments;
+}
+
+$trainerAppointments = getTrainerAppointments($conn);
 
 
 
+function getPlanAppointments($conn) {
+    $sql = "SELECT * FROM customerplan";
+    $result = $conn->query($sql);
+    $Pappointments = [];
+    if($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $Pappointments[] = $row;
+        }
+    }
+    return $Pappointments;
+}
 
+$planAppointments = getPlanAppointments($conn);
 
 ?>

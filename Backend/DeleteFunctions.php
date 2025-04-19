@@ -2,38 +2,36 @@
 @include 'config.php';
 
 
-// ------------------   CLASS DELETE FUNCTION START-----------//
-
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    mysqli_query($conn, "DELETE FROM classes WHERE id = $id");
-    header('location:addClasses.php');
-}
 
 
-
-// ------------------   TRAINER DELETE FUNCTION SATART-----------//
 
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     mysqli_query($conn, "DELETE FROM trainer WHERE id = $id");
-    header('location:addTrainers.php');
+    header('location:adminDashbord.html');
 }
 
 
 
-// ------------------   MEMBERSHIP PLAN DELETE FUNCTION START-----------//
+
+
+if (isset($_GET['delete'])) {
+    $id = $_GET['delete'];
+    mysqli_query($conn, "DELETE FROM classes WHERE id = $id");
+    header('location:adminDashbord.html');
+}
+
 
 
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     mysqli_query($conn, "DELETE FROM plans WHERE id = $id");
-    header('location: membershipPlan.php');
+    header('location:adminDashbord.html');
 }
 
 
-// ------------------   SUCCESS STORIES DELETE FUNCTION START-----------//
+
 
 
 
@@ -41,18 +39,18 @@ if (isset($_GET['delete'])) {
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
     mysqli_query($conn, "DELETE FROM story WHERE id = $id");
-    header('location: successStoryForm.php');
+    header('location:adminDashbord.html');
 }
 
 
 
 // ----------------------------- DELETE STAFF ==========================/
 
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    mysqli_query($conn, "DELETE FROM addstff WHERE id = $id");
-    header('location: ViewStaff.php');
-}
+// if (isset($_GET['delete'])) {
+//     $id = $_GET['delete'];
+//     mysqli_query($conn, "DELETE FROM addstff WHERE id = $id");
+//     header('location: ViewStaff.php');
+// }
 
 
 
